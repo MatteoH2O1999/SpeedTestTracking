@@ -1,2 +1,2 @@
 # SpeedTestTracking
-Provides a way to constantly moinitor network performance.
+Provides a way to constantly monitor network performance.
