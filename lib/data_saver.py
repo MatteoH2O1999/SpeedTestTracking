@@ -26,6 +26,7 @@ def save_data(ping, download, upload):
 
 
 def clear_data_file():
-    path = os.environ['MODULE_PATH'] + '/runtime/data.csv'
-    os.remove(path)
+    path = os.environ['MODULE_PATH'] + '/runtime'
+    for file in os.listdir(path):
+        os.remove(path + '/' + file)
     os.rmdir(os.environ['MODULE_PATH'] + '/runtime')

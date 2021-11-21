@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speedtest Launcher</title>
+    <link rel="icon" href="/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <form action="/testing.html" onsubmit="submitData()">
+        <label for="test_interval">Time between different tests in seconds:</label><br>
+        <div class="flex_container">
+            <input type="number" name="test_interval" id="test_interval" required min="1" value="300"><br>
+        </div>
+        <label for="path">Save plots to:</label><br>
+        <div class="flex_container">
+            <input type="text" name="path" id="path" required class="path_input">
+            <button onclick="chooseFolder()" type="button" class="dir_chooser">Choose path</button><br>
+        </div>
+        <label for="ticks">Max ticks for plots:</label><br>
+        <div class="flex_container">
+            <input type="number" name="ticks" id="ticks" required value="6"><br>
+        </div>
+        <input type="submit" value="Start Testing">
+    </form>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript">
+        function track(interval, plot_path, max_ticks) {
+            eel.create_tracking(parseInt(interval), plot_path, parseInt(max_ticks));
+        }
+        async function chooseFolder() {
+            folder = await eel.select_folder()();
+            document.getElementById("path").value = folder;
+        }
+        async function submitData() {
+            await eel.activate_submit();
+            interval = document.getElementById("test_interval").value;
+            path = document.getElementById("path").value;
+            ticks = document.getElementById("ticks").value;
+            track(interval, path, ticks);
+        }
+    </script>
+</body>
+</html>

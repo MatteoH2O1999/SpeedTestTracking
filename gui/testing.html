@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speedtest Tracker</title>
+    <link rel="icon" href="/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Console', this)" id="consoleButton">Console</button>
+        <button class="tablinks inactive" onclick="openTab(event, 'Ping', this)" id="pingButton">Ping</button>
+        <button class="tablinks inactive" onclick="openTab(event, 'Download', this)" id="downloadButton">Download</button>
+        <button class="tablinks inactive" onclick="openTab(event, 'Upload', this)" id="uploadButton">Upload</button>
+    </div>
+    <div id="Console" class="tabcontent">
+        <div class='terminal' id='cmd'></div>
+    </div>
+    <div id="Ping" class="tabcontent">
+        <img src="/runtime/ping.png" alt="" id="ping" class="plot">
+    </div>
+    <div id="Download" class="tabcontent">
+        <img src="/runtime/download.png" alt="" id="download" class="plot">
+    </div>
+    <div id="Upload" class="tabcontent">
+        <img src="/runtime/upload.png" alt="" id="upload" class="plot">
+    </div>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="scripts/main.js"></script>
+    <script type='text/javascript'>
+        function update_html_plots() {
+            document.getElementById("ping").src = "runtime/ping.png?" + new Date().getTime();
+            document.getElementById("upload").src = "runtime/upload.png?" + new Date().getTime();
+            document.getElementById("download").src = "runtime/download.png?" + new Date().getTime();
+            updates += 1;
+            if(updates === 2) {
+                document.getElementById("pingButton").className = "tablinks";
+                document.getElementById("downloadButton").className = "tablinks";
+                document.getElementById("uploadButton").className = "tablinks";
+            }
+        }
+        function write_console(msg) {
+            msg = ">> " + msg;
+            msg = msg.replace(/\n/g, "<br>>> ");
+            document.getElementById("cmd").innerHTML += msg + "<br>";
+        }
+        function clean_console() {
+            document.getElementById("cmd").innerHTML = "";
+        }
+        eel.expose(write_console);
+        eel.expose(clean_console);
+        eel.expose(update_html_plots);
+        var updates = 0;
+        document.getElementById("consoleButton").click();
+        eel.start_tracking();
+    </script>
+</body>
+</html>

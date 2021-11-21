@@ -27,6 +27,7 @@ def plot(path):
             else:
                 count += 1
         i += 1
+    sns.set_theme()
     sns.set_palette('colorblind')
     plt.figure(dpi=1200)
     sns.lineplot(data=data, x='time', y='ping')
@@ -45,7 +46,7 @@ def plot(path):
     plt.ylim(0, max(data['download']) * 1.05)
     plt.xticks(rotation=20, horizontalalignment='right')
     plt.title('Download')
-    plt.savefig(path + '/donwload.png', backend='agg', bbox_inches='tight')
+    plt.savefig(path + '/download.png', backend='agg', bbox_inches='tight')
     plt.clf()
     sns.lineplot(data=data, x='time', y='upload')
     plt.xlabel(None)

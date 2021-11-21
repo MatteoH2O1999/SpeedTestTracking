@@ -1,4 +1,5 @@
 # Manages the SpeedTest loop
+import eel
 import math
 import os
 import threading
@@ -17,7 +18,11 @@ class SpeedTestTracking(threading.Thread):
         self.expected_connection = expected_connection
         self.cont = True
         self.path = path
-        threading.Thread.__init__(self, *args, **kwargs)
+        self.callback = kwargs['callback_function']
+        self.gui = False
+        if self.callback:
+            self.gui = True
+        threading.Thread.__init__(self)
 
     def run(self) -> None:
         lib.data_saver.create_data_file()
@@ -26,32 +31,39 @@ class SpeedTestTracking(threading.Thread):
         counter = 1
         while self.cont:
             last_time = time.time()
-            print('Fetching best server...')
+            self.print_cmd('Fetching best server...')
             st.get_best_server()
             best = st.get_best_server()
-            print(f'Using server located in {best["name"]}, {best["country"]}')
-            print('Testing download speed...')
+            self.print_cmd(f'Using server located in {best["name"]}, {best["country"]}.')
+            self.print_cmd('Testing download speed...')
             st.download()
-            print('Testing upload speed...')
+            self.print_cmd('Testing upload speed...')
             st.upload()
-            print('Saving test data...')
+            self.print_cmd('Saving test data...')
             res = st.results.dict()
             lib.data_saver.save_data(res['ping'], res['download'] / (1024**2), res['upload'] / (1024**2))
-            print(f'\nTest {counter} completed')
-            time.sleep(2)
+            self.print_cmd(f'\nTest {counter} completed')
+            if self.gui:
+                self.callback()
             current_time = time.time()
             next_time = last_time + self.interval_seconds
             while current_time - last_time < self.interval_seconds and self.cont:
-                cls()
+                self.cls()
                 if next_time - current_time >= 30:
-                    print(f'Next test will start in {math.ceil((next_time - current_time) / 60)} minutes.\n'
-                          f'Press enter to stop...')
+                    self.print_cmd(f'Next test will start in {math.ceil((next_time - current_time) / 60)} minutes.')
+                    if self.gui:
+                        self.print_cmd('Close tracker to stop...')
+                    else:
+                        self.print_cmd('Press enter to stop...')
                 else:
-                    print(f'Next test will start in {round(next_time - current_time)} seconds.\n'
-                          f'Press enter to stop...')
+                    self.print_cmd(f'Next test will start in {round(next_time - current_time)} seconds.')
+                    if self.gui:
+                        self.print_cmd('Close tracker to stop...')
+                    else:
+                        self.print_cmd('Press enter to stop...')
                 time.sleep(1)
                 current_time = time.time()
-            cls()
+            self.cls()
             counter += 1
         lib.plot_graphs.plot(self.path)
         lib.data_saver.clear_data_file()
@@ -59,6 +71,14 @@ class SpeedTestTracking(threading.Thread):
     def prepared_stop(self):
         self.cont = False
 
+    def cls(self):
+        if self.gui:
+            eel.clean_console()
+        else:
+            os.system('cls' if os.name == 'nt' else 'clear')
 
-def cls():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    def print_cmd(self, msg):
+        if self.gui:
+            eel.write_console(msg)
+        else:
+            print(msg)
