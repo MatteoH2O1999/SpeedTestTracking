@@ -9,6 +9,8 @@ jobs:
     outputs:
       upload_url: ${{ steps.release_id.outputs.upload_url }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Read release notes
         id: notes
         uses: andstor/file-reader-action@v1
