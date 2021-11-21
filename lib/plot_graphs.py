@@ -8,7 +8,10 @@ import matplotlib.pyplot as plt
 from . import get_max_ticks
 
 
-def plot(path):
+def plot(path, fast=False):
+    resolution = 1200
+    if fast:
+        resolution = 200
     max_ticks = get_max_ticks()
     plt.switch_backend('agg')
     file = os.environ['MODULE_PATH'] + '/runtime/data.csv'
@@ -29,7 +32,7 @@ def plot(path):
         i += 1
     sns.set_theme()
     sns.set_palette('colorblind')
-    plt.figure(dpi=1200)
+    plt.figure(dpi=resolution)
     sns.lineplot(data=data, x='time', y='ping')
     plt.xlabel(None)
     plt.xticks(x_labels)

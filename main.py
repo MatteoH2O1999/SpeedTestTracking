@@ -35,5 +35,5 @@ if __name__ == '__main__':
         expected_conn = sys.argv[4]
     except IndexError:
         expected_conn = None
-    main(int(sys.argv[1]), sys.argv[2], m_ticks, expected_conn)
+    main(test_interval, path, m_ticks, expected_conn)
     exit(0)

@@ -4,6 +4,7 @@ import os
 import tkinter
 import tkinter.filedialog as filedialog
 import shutil
+from sys import exit
 
 from .plot_graphs import plot
 from . import set_max_ticks
@@ -65,5 +66,5 @@ def runtime_plot():
     if os.path.isdir(path):
         shutil.rmtree(path)
     os.makedirs(path)
-    plot(path)
+    plot(path, True)
     eel.update_html_plots()
