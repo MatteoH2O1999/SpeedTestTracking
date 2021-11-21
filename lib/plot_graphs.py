@@ -9,6 +9,7 @@ from . import get_max_ticks
 
 
 def plot(path, fast=False):
+    os.makedirs(path, exist_ok=True)
     resolution = 1200
     if fast:
         resolution = 200

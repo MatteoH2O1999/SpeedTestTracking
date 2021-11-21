@@ -47,6 +47,8 @@ def start_tracking():
 def on_close(route, url):
     if isinstance(tracker, SpeedTestTracking):
         if tracker.is_alive():
+            print('Finalizing last scan and creating plots...\nPlease do NOT close this window. It will close '
+                  'automatically.')
             tracker.prepared_stop()
             tracker.join()
             if os.path.isdir(os.environ['MODULE_PATH'] + '/gui/runtime'):
