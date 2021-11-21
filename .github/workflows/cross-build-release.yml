@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url}}
-          asset_path: dist/Speedtest-cli
+          asset_path: dist/Speedtest-cli.exe
           asset_name: Speedtest-cli_win64
           asset_content_type: application/zip
       - name: Upload GUI asset to release
@@ -65,7 +65,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url}}
-          asset_path: dist/SpeedtestGUI
+          asset_path: dist/SpeedtestGUI.exe
           asset_name: SpeedtestGUI_win64
           asset_content_type: application/zip
   build_linux:
@@ -88,6 +88,10 @@ jobs:
         run: rm -rf build
       - name: Create single executable for cli usage
         run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Make cli file executable
+        run: chmod +x ./dist/Speedtest-cli
+      - name: Make GUI file executable
+        run: chmod +x ./dist/SpeedtestGUI
       - name: Upload cli asset to release
         id: upload_cli_asset
         uses: actions/upload-release-asset@v1
@@ -128,6 +132,10 @@ jobs:
         run: rm -rf build
       - name: Create single executable for cli usage
         run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Make cli file executable
+        run: chmod +x ./dist/Speedtest-cli
+      - name: Make GUI file executable
+        run: chmod +x ./dist/SpeedtestGUI
       - name: Upload cli asset to release
         id: upload_cli_asset
         uses: actions/upload-release-asset@v1
