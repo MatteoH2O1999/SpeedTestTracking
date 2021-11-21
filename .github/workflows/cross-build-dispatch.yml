@@ -1,0 +1,92 @@
+name: cross-build-dispatch
+on:
+  workflow_dispatch:
+jobs:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Upload GUI artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: SpeedtestGUI_win64
+          path: dist/SpeedtestGUI.exe
+      - name: Clean build directory
+        run: rd build /s /q
+        shell: cmd
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Speedtest-cli_win64
+          path: dist/Speedtest-cli.exe
+  build_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Upload GUI artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: SpeedtestGUI_linux
+          path: dist/SpeedtestGUI
+      - name: Clean build directory
+        run: rm -rf build
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Speedtest-cli_linux
+          path: dist/Speedtest-cli
+  build_darwin:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Upload GUI artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: SpeedtestGUI_macOS
+          path: dist/SpeedtestGUI
+      - name: Clean build directory
+        run: rm -rf build
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Speedtest-cli_macOS
+          path: dist/Speedtest-cli

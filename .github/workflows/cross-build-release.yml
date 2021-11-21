@@ -1,0 +1,142 @@
+name: cross-build-release
+on:
+  push:
+    tags:
+      - 'v[0-9][0-9]*.?[0-9]*.?[0-9]*'
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.release_id.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: release_id
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+  build_windows:
+    runs-on: windows-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Clean build directory
+        run: rd build /s /q
+        shell: cmd
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli asset to release
+        id: upload_cli_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/Speedtest-cli
+          asset_name: Speedtest-cli_win64
+          asset_content_type: application/zip
+      - name: Upload GUI asset to release
+        id: upload_GUI_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/SpeedtestGUI
+          asset_name: SpeedtestGUI_win64
+          asset_content_type: application/zip
+  build_linux:
+    runs-on: ubuntu-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Clean build directory
+        run: rm -rf build
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli asset to release
+        id: upload_cli_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/Speedtest-cli
+          asset_name: Speedtest-cli_linux
+          asset_content_type: application/zip
+      - name: Upload GUI asset to release
+        id: upload_GUI_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/SpeedtestGUI
+          asset_name: SpeedtestGUI_linux
+          asset_content_type: application/zip
+  build_darwin:
+    runs-on: macos-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing requirements
+        run: pip install -r requirements.txt
+      - name: Installing Pyinstaller
+        run: pip install pyinstaller
+      - name: Create single executable with chromium GUI
+        run: python -m eel main_gui.py gui --onefile --icon=icon.ico --name 'SpeedtestGUI'
+      - name: Clean build directory
+        run: rm -rf build
+      - name: Create single executable for cli usage
+        run: pyinstaller main.py --onefile --icon=icon.ico --name 'Speedtest-cli'
+      - name: Upload cli asset to release
+        id: upload_cli_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/Speedtest-cli
+          asset_name: Speedtest-cli_macOS
+          asset_content_type: application/zip
+      - name: Upload GUI asset to release
+        id: upload_GUI_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url}}
+          asset_path: ./dist/SpeedtestGUI
+          asset_name: SpeedtestGUI_macOS
+          asset_content_type: application/zip
