@@ -9,6 +9,11 @@ jobs:
     outputs:
       upload_url: ${{ steps.release_id.outputs.upload_url }}
     steps:
+      - name: Read release notes
+        id: notes
+        uses: andstor/file-reader-action@v1
+        with:
+          path: RELEASE.md
       - name: Create release
         id: release_id
         uses: actions/create-release@v1
@@ -16,6 +21,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
+          body: ${{ steps.notes.outputs.contents }}
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
