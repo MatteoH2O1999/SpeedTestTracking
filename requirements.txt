@@ -1,6 +1,6 @@
-seaborn==0.11.2
-pandas==1.3.4
-matplotlib==3.4.3
-Eel==0.14.0
+seaborn
+pandas
+matplotlib
+Eel
 speedtest-cli
-openpyxl==3.0.9
+openpyxl
