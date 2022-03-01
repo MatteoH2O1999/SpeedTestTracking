@@ -4,8 +4,11 @@ on:
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
 jobs:
+  call_test_workflow:
+    uses: ./.github/workflows/cross-platform-tests.yml
   create_release:
     runs-on: ubuntu-latest
+    needs: call_test_workflow
     outputs:
       upload_url: ${{ steps.release_id.outputs.upload_url }}
     steps:
