@@ -109,7 +109,7 @@ jobs:
           asset_name: SpeedtestGUI_linux
           asset_content_type: application/zip
   build_darwin:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     needs: create_release
     steps:
       - name: Checkout code
