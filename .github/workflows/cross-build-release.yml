@@ -1,4 +1,4 @@
-name: cross-build-release
+name: Release workflow
 on:
   push:
     tags:

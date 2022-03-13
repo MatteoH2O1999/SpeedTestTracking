@@ -1,5 +1,6 @@
 # SpeedTestTracking
-![example workflow](https://github.com/MatteoH2O1999/SpeedTestTracking/actions/workflows/cross-platform-tests.yml/badge.svg)
+![test workflow](https://github.com/MatteoH2O1999/SpeedTestTracking/actions/workflows/cross-platform-tests.yml/badge.svg)
+![build workflow](https://github.com/MatteoH2O1999/SpeedTestTracking/actions/workflows/cross-build-release.yml/badge.svg)
 
 Provides a way to constantly monitor network performance. It collects network speeds over a long time and plots the results to be easily accessible.
 

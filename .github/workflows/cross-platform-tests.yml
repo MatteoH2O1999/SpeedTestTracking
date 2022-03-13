@@ -1,9 +1,11 @@
-name: cross-platform-testing
+name: Testing workflow
 on:
   workflow_dispatch:
   push:
     tags-ignore:
       - v[0-9]+.[0-9]+.[0-9]+
+    branches:
+      - '**'
   workflow_call:
 jobs:
   cross-platform-tests:
@@ -25,7 +27,7 @@ jobs:
           cache: 'pip'
       - name: Install requirements
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt --upgrade
       - name: Install development requirements
         run: |
