@@ -7,7 +7,12 @@ import pytest
 from lib.speed_test_tracking import SpeedTestTracking
 
 
-@pytest.mark.timeout(60)
+def is_not_timeout(err, *args):
+    return not issubclass(err[0], TimeoutError)
+
+
+@pytest.mark.timeout(180)
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=is_not_timeout)
 def test_one_cycle():
     os.environ['MODULE_PATH'] = os.path.dirname(os.path.realpath(__file__))
     tracker = SpeedTestTracking(600, './plots', expected_connection=None, callback_function=None)
